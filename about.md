@@ -4,18 +4,16 @@ title: About
 permalink: /about/
 ---
 
-This is a template website for showing p5.js sketches. See [here](https://github.com/BenjaminHabert/jekyll-p5-portfolio) for more infos.
+## About the website
+
+This site was build from a template that I created
+([github project](https://github.com/BenjaminHabert/jekyll-p5-portfolio)). This template
+makes it easy to create and document simple projects like `p5.js` sketches. It is based
+on the [Jekyll]((https://jekyllrb.com/)) theme [Minima]((https://github.com/jekyll/minima)).
 
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+## About me
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+31, French, currently working as a datascientist at [Quantmetry](https://www.quantmetry.com/).
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
-
-
-[jekyll-organization]: https://github.com/jekyll
+I enjoy when beauty and complexity arise from simple rules.
