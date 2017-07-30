@@ -15,5 +15,3 @@ on the [Jekyll]((https://jekyllrb.com/)) theme [Minima]((https://github.com/jeky
 ## About me
 
 31, French, currently working as a datascientist at [Quantmetry](https://www.quantmetry.com/).
-
-I enjoy when beauty and complexity arise from simple rules.
