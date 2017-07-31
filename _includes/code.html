@@ -5,7 +5,6 @@
 $.get(
     "{{include.file}}",
     function(data){
-        console.log(data);
         var selection = $("#{{code_id}}")
         selection.html(data);
         hljs.highlightBlock(selection[0]);
