@@ -19,16 +19,25 @@ var sketch = function(p) {
 	var amplitudeEnd = 0.4;
 	var stepStart = 0.05;
 	var stepEnd = 0.01;
-
+    var backColor = "#f1d7b9";
+    var lastColor = "#1f3c4a";
 
 	p.setup = function() {
 		p.pixelDensity(1);
 		var w = decideMainWidth(800);
 
-	  	p.createCanvas(w, w/2);
+	  	p.createCanvas(w, w * 3/5);
 	  	p.background(0);
 	  	p.ellipseMode(p.CENTER);
 	  	// p.noiseDetail(50,0.4);
+        p.backColors = [
+            p.color(218, 165, 32),
+            p.color("#f1d7b9")
+        ]
+        p.frontColors = [
+            lastColor = p.color(30, 30, 70),
+            p.color("#1f3c4a")
+        ]
 	};
 
 	function newMountainsParams(){
@@ -40,6 +49,8 @@ var sketch = function(p) {
 		amplitudeEnd *= p.random(0.95, 1.05);
 		stepStart *= p.random(0.95, 1.05);
 		stepEnd *= p.random(0.95, 1.05);
+        backColor = p.random(p.backColors);
+        lastColor = p.random(p.frontColors);
 	}
 
 	function drawMontain(position, amplitude, step, z){
@@ -65,11 +76,10 @@ var sketch = function(p) {
 		p.line(10, 10, 50, 50);
 	}
 
+
+
 	p.draw = function() {
-		var backColor = p.color(218, 165, 32);
-		// var lastColor = p.color(52, 51, 109);
-		var lastColor = p.color(30, 30, 70);
-		var firstColor = p.lerpColor(lastColor, backColor, 0.8);
+		var firstColor = p.lerpColor(p.color(lastColor), p.color(backColor), 0.8);
 
 		p.background(backColor);
 		p.noStroke();
