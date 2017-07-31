@@ -1,3 +1,20 @@
+# FOR THE WEBSITE ITSELF
+- name: jquery
+  element: <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+- name: highlight
+  element:
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github-gist.min.css" />
+
+- name: flexbox
+  element: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css" />
+
+# DEV-DEPENDENCIES
+- name: live
+  element: <script type="text/javascript" src="http://livejs.com/live.js"></script>
+
+# PROJECTS DEPENDENCIES
 - name: p5
   element: <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.min.js"></script>
 
@@ -6,9 +23,3 @@
 
 - name: p5.sound
   element: <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.sound.min.js"></script>
-
-- name: flexbox
-  element: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css" />
-
-- name: live
-  element: <script type="text/javascript" src="http://livejs.com/live.js"></script>

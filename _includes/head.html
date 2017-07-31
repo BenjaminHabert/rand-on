@@ -11,6 +11,9 @@
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
   <!-- dependencies -->
   {% include dependency.html name="flexbox" %}
+  {% include dependency.html name="jquery" %}
+  {% include dependency.html name="highlight" %}
+
   <!-- dev-dependencies -->
   {% if jekyll.environment == 'development' %}
     {% include dependency.html name="live" %}
@@ -23,4 +26,6 @@
   {% if jekyll.environment == 'production' and site.google_analytics %}
     {% include google-analytics.html %}
   {% endif %}
+
+
 </head>

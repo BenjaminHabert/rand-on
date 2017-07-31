@@ -1,0 +1,14 @@
+{% assign code_id = include.file | replace: "/", "" | replace: ".", ""  %}
+<b onclick='$("#{{code_id}}").toggle()' style='cursor:pointer;'>Show/hide code - {{include.file}}</b>
+<pre><code id="{{code_id}}" style="display: none" class="javascript"></code></pre>
+<script>
+$.get(
+    "{{include.file}}",
+    function(data){
+        console.log(data);
+        var selection = $("#{{code_id}}")
+        selection.html(data);
+        hljs.highlightBlock(selection[0]);
+    },
+    "text")
+</script>
