@@ -2,6 +2,9 @@
 <b onclick='$("#{{code_id}}").toggle()' style='cursor:pointer;'>Show/hide code - {{include.file}}</b>
 <pre><code id="{{code_id}}" style="display: none" class="javascript"></code></pre>
 <script>
+hljs.configure({
+  tabReplace: '    ', // 4 spaces
+});
 $.get(
     "{{include.file}}",
     function(data){
