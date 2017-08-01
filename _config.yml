@@ -17,8 +17,8 @@ title: "Rand(On)"
 email: benj..habert@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
   A collection of codes and experiments. Mostly based on p5.js and paper.
-baseurl: "/rand-on" # the subpath of your site, e.g. /blog
-url: "https://benjaminhabert.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "rand-on.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: benjaminhabert
 github_username:  BenjaminHabert
 
