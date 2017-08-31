@@ -1,0 +1,12 @@
+rect {
+  fill: steelblue;
+}
+
+rect.highlighted {
+  fill: brown;
+}
+
+circle{
+    fill: darkgreen;
+    pointer-events: none;
+}
