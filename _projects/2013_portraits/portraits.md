@@ -5,6 +5,7 @@ title: Fading Portraits
 galleries:
 - name: portraits
   files:
+    - portrait_30656.png
 
 thumbnail: portrait_15926.png
 ---
