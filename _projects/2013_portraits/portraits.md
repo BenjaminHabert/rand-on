@@ -5,15 +5,7 @@ title: Fading Portraits
 galleries:
 - name: portraits
   files:
-	- portrait_30656.png
-	- portrait_30703.png
-	- portrait_30711.png
-	- portrait_31228.png
-	- portrait_31230.png
-	- portrait_31232.png
-	- portrait_31612.png
-	- portrait_31614.png
-	- portrait_31617.png
+
 thumbnail: portrait_15926.png
 ---
 
