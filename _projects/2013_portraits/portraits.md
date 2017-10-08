@@ -35,4 +35,3 @@ their thickness and curvature depend on the image local brightness. Unfortunatel
 
 ### Gallery
 
-{% include gallery.html gallery="portraits" %}
