@@ -3,23 +3,24 @@ layout: post
 date: 2013-02-06
 title: Fading Portraits
 galleries:
-    - name: portraits
-      files:
-		- 031228.png
-		- 031230.png
-		- 031232.png
-		- 031612.png
-		- 031614.png
-		- 031617.png
-		- 030656.png
-		- 030703.png
-		- 030711.png
-thumbnail: 015926.png
+- name: portraits
+  files:
+	- 31228.png
+	- 31230.png
+	- 31232.png
+	- 31612.png
+	- 31614.png
+	- 31617.png
+	- 30656.png
+	- 30703.png
+	- 30711.png
+
+thumbnail: 15926.png
 ---
 
-![portrait](015926.png)
+![portrait](15926.png)
 
-![portrait](031614.png)
+![portrait](31614.png)
 
 In these portaits I enjoy the visual effect of scale. Seen from far away facial features can be 
 identified; seen in close-up the complex shapes of the lines overpower our ability to recognize a face. 
@@ -33,4 +34,5 @@ their thickness and curvature depend on the image local brightness. Unfortunatel
 
 
 ### Gallery
+
 {% include gallery.html gallery="portraits" %}
