@@ -8,8 +8,8 @@ galleries:
     - folds/diagonal_purple.JPG
     - folds/diagonal_green.JPG
     - folds/sun.JPG
-    - folds/vertial_blue.JPG
-    - folds/vertial_pink.JPG
+    - folds/vertical_blue.JPG
+    - folds/vertical_pink.JPG
     - folds/criss_cross.JPG
     - folds/scamble.JPG
     - folds/mountain.JPG
