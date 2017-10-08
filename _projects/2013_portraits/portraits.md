@@ -5,21 +5,21 @@ title: Fading Portraits
 galleries:
 - name: portraits
   files:
-	- "31228.png"
-	- "31230.png"
-	- "31232.png"
-	- "31612.png"
-	- "31614.png"
-	- "31617.png"
-	- "30656.png"
-	- "30703.png"
-	- "30711.png"
-thumbnail: "15926.png"
+	- portrait_31228.png
+	- portrait_31230.png
+	- portrait_31232.png
+	- portrait_31612.png
+	- portrait_31614.png
+	- portrait_31617.png
+	- portrait_30656.png
+	- portrait_30703.png
+	- portrait_30711.png
+thumbnail: portrait_15926.png
 ---
 
-![portrait](15926.png)
+![portrait](portrait_15926.png)
 
-![portrait](31614.png)
+![portrait](portrait_31614.png)
 
 In these portaits I enjoy the visual effect of scale. Seen from far away facial features can be 
 identified; seen in close-up the complex shapes of the lines overpower our ability to recognize a face. 
