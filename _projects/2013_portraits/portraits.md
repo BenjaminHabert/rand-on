@@ -31,4 +31,4 @@ the text is fading away.
 These portraits were generated using Processing. Lines are drawn from left to right over a source image: 
 their thickness and curvature depend on the image local brightness. Unfortunately I lost the source code.
 
-{% include gallery.html gallery="portraits"%}
+{% include gallery.html gallery="portraits" %}
