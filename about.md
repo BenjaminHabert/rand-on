@@ -6,6 +6,8 @@ permalink: /about/
 
 ## About the website
 
+[github project of this website](https://github.com/BenjaminHabert/rand-on)
+
 This site was build from a template that I created
 ([github project](https://github.com/BenjaminHabert/jekyll-p5-portfolio)). This template
 makes it easy to create and document simple projects like `p5.js` sketches. It is based
