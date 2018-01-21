@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Technical Newsletter"
+subtitle: "Angular, Python, TF-IDF, text-processing"
 date:   2017-02-01
 thumbnail: newsletter.png
 ---

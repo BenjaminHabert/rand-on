@@ -2,6 +2,7 @@
 layout: post
 date: 2015-05-07
 title: Wine Production
+subtitle: "Open Data, D3"
 thumbnail: wine.png
 dependencies:
     - d3v3

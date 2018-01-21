@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Drawing Distributions"
+subtitle: "stats, D3, teaching"
 date:   2017-08-30
 dependencies:
     - d3v4
