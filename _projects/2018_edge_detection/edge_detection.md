@@ -1,6 +1,6 @@
 ---
 layout: post
-date: 2018-03-29
+date: 2018-03-31
 title: Edge Detection
 thumbnail: edge_detection.png
 dependencies:
