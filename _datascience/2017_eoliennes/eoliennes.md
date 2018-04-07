@@ -15,9 +15,9 @@ with [ggplot2](http://ggplot2.org/). I am not very familiar with R and it was my
 Most of the work was to measure the availability of each data source (more that 200 sensors per
 turbine).
 
-![](disponibilite_capteurs_yyyy_wt01_tronque.png)
+![](disponibilite_capteurs_yyyy_wt01_tronque_blur.png)
 
-![](disponibilite_toutes_eoliennes_240-280.png)
+![](disponibilite_toutes_eoliennes_240-280_blur.png)
 
 This first step allowed us to descriminate between sensors the one that we could use reliably.
 A first level of analysis was then to compare in a projected feature space (PCA) wind turbines with and
