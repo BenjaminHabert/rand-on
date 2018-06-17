@@ -4,3 +4,4 @@ docs/
 Gemfile.lock
 _projects/aa_template/
 tmp
+.DS_Store
