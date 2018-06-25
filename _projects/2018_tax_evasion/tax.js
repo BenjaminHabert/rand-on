@@ -27,14 +27,13 @@ function draw() {
   }
 
   clear();
-  Object.values(cities).forEach(city => city.drawNeighbors())
-  Object.values(cities).forEach(city => city.drawCity())
+  cities.forEach(city => city.drawNeighbors())
+  cities.forEach(city => city.drawCity())
 }
 
 
 class City {
   constructor(id, lat, lng) {
-    console.log(id, lat, lng)
     this.id = id;
     this.lat = lat;
     this.lng = lng;
@@ -78,26 +77,26 @@ function mouseClicked() {
 
 function prepareCities(allCities) {
   // STEP 1: get sample of city from geojson object
-  let cities = {};
-  while (Object.keys(cities).length < NCITIES) {
+  let cities = [];
+  while (cities.length < NCITIES) {
     let randomCity = random(allCities.features);
     let id = randomCity.id
-    if (!Object.keys(cities).includes(id)) {
+    if (!cities.map(city => city.id).includes(id)) {
       let lat = randomCity.geometry.coordinates[1],
           lng = randomCity.geometry.coordinates[0];  // geojson...
-      cities[id] = new City(id, lat, lng);
+      cities.push(new City(id, lat, lng));
     }
   }
 
 
   // STEP 2: find 2 neighbors for each city
-  citiesArray = Object.values(cities);
-  Object.keys(cities).forEach( id => {
-    let city = cities[id];
-    city.neighbors = citiesArray
+  cities.slice().forEach( city => {
+    // using .slice() above because I then reorder the elements and I
+    // don't want to miss a city in the forEach loop because of that
+    // (it will miss some without it)
+    city.neighbors = cities
       .sort((a, b) => city.distanceTo(a) - city.distanceTo(b))
-      .slice(0, int(random(1.8, 3.2)))
-      // .map(other => other.id);
+      .slice(0, int(random(1.8, 3.2)));
   });
 
   return cities
