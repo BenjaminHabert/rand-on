@@ -27,9 +27,8 @@ function draw() {
   }
 
   clear();
-  cities.forEach(city => city.drawNeighbors())
-  cities.forEach(city => city.drawCity())
-  cities.forEach(city => city.drawMoney())
+  cities.forEach(city => city.update())
+  cities.forEach(city => city.draw())
 }
 
 
@@ -56,6 +55,7 @@ class City {
     this.LngLat = [lng, lat];
     this.LatLng = [lat, lng];
     this.neighbors = [];
+    this.canReceive = true;
 
     this.money = [];
     for (let i = 0; i < 5; i++) {
@@ -63,15 +63,22 @@ class City {
     }
   }
 
-  distanceTo(other) {
-    if (this.id == other.id) {
-      return Infinity;
+  update() {
+    const pos = this.pos();
+    this.canReceive = true;
+    if (dist(pos.x, pos.y, mouseX, mouseY) < 50) {
+      this.canReceive = false;
     }
-    return earth.map.distance(this.LatLng, other.LatLng);
+  }
+
+  draw() {
+    this.drawCity();
+    this.drawNeighbors();
+    // this.drawMoney();
   }
 
   drawCity() {
-    fill(0);
+    fill(this.canReceive? 0: 'rgb(255, 100, 100)');
     const pos = this.pos()
     ellipse(pos.x, pos.y, 10, 10);
   }
@@ -95,6 +102,13 @@ class City {
 
   pos() {
     return earth.latLngToPixel(this.lat, this.lng);
+  }
+
+  distanceTo(other) {
+    if (this.id == other.id) {
+      return Infinity;
+    }
+    return earth.map.distance(this.LatLng, other.LatLng);
   }
 }
 
