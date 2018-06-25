@@ -29,6 +29,22 @@ function draw() {
   clear();
   cities.forEach(city => city.drawNeighbors())
   cities.forEach(city => city.drawCity())
+  cities.forEach(city => city.drawMoney())
+}
+
+
+class Money {
+  constructor(city) {
+    this.currentCity = city;
+    this.targetCity = city;
+    // current
+    this.lat = city.lat;
+    this.lng = city.lng;
+  }
+
+  pos() {
+    return earth.latLngToPixel(this.lat, this.lng);
+  }
 }
 
 
@@ -40,6 +56,11 @@ class City {
     this.LngLat = [lng, lat];
     this.LatLng = [lat, lng];
     this.neighbors = [];
+
+    this.money = [];
+    for (let i = 0; i < 5; i++) {
+      this.money.push(new Money(this));
+    }
   }
 
   distanceTo(other) {
@@ -58,9 +79,17 @@ class City {
   drawNeighbors() {
     stroke(0);
     this.neighbors.forEach(to => {
-      const fromPos = earth.latLngToPixel(this.lat, this.lng);
-      const toPos = earth.latLngToPixel(to.lat, to.lng);
+      const fromPos = this.pos();
+      const toPos = to.pos();
       line(fromPos.x, fromPos.y, toPos.x, toPos.y);
+    })
+  }
+
+  drawMoney() {
+    fill(255);
+    this.money.forEach(m => {
+      const pos = m.pos();
+      ellipse(pos.x, pos.y, 8, 8);
     })
   }
 
