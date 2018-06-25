@@ -27,28 +27,47 @@ function draw() {
   }
 
   clear();
-  showCities(cities);
+  Object.values(cities).forEach(city => city.drawNeighbors())
+  Object.values(cities).forEach(city => city.drawCity())
 }
 
 
-function showCities(cities) {
-  fill(0);
-  stroke(0);
+class City {
+  constructor(id, lat, lng) {
+    console.log(id, lat, lng)
+    this.id = id;
+    this.lat = lat;
+    this.lng = lng;
+    this.LngLat = [lng, lat];
+    this.LatLng = [lat, lng];
+    this.neighbors = [];
+  }
 
-  // cities
-  Object.values(cities).forEach(city => {
-    let pos = earth.latLngToPixel(city.lat, city.lng);
+  distanceTo(other) {
+    if (this.id == other.id) {
+      return Infinity;
+    }
+    return earth.map.distance(this.LatLng, other.LatLng);
+  }
+
+  drawCity() {
+    fill(0);
+    const pos = this.pos()
     ellipse(pos.x, pos.y, 10, 10);
-  });
+  }
 
-  // links between cities
-  Object.values(cities).forEach(from => {
-    Object.values(from.neighbors).forEach(to => {
-      const fromPos = earth.latLngToPixel(from.lat, from.lng);
+  drawNeighbors() {
+    stroke(0);
+    this.neighbors.forEach(to => {
+      const fromPos = earth.latLngToPixel(this.lat, this.lng);
       const toPos = earth.latLngToPixel(to.lat, to.lng);
       line(fromPos.x, fromPos.y, toPos.x, toPos.y);
-    });
-  });
+    })
+  }
+
+  pos() {
+    return earth.latLngToPixel(this.lat, this.lng);
+  }
 }
 
 
@@ -82,25 +101,6 @@ function prepareCities(allCities) {
   });
 
   return cities
-}
-
-class City {
-  constructor(id, lat, lng) {
-    console.log(id, lat, lng)
-    this.id = id;
-    this.lat = lat;
-    this.lng = lng;
-    this.LngLat = [lng, lat];
-    this.LatLng = [lat, lng];
-    this.neighbors = [];
-  }
-
-  distanceTo(other) {
-    if (this.id == other.id) {
-      return Infinity;
-    }
-    return earth.map.distance(this.LatLng, other.LatLng);
-  }
 }
 
 
