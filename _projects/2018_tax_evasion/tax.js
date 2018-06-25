@@ -36,7 +36,7 @@ function showCities(cities) {
   stroke(0);
 
   // cities
-  Object.values(cities).forEach(function (city) {
+  Object.values(cities).forEach(city => {
     let pos = earth.latLngToPixel(city.lat, city.lng);
     ellipse(pos.x, pos.y, 10, 10);
   });
@@ -68,14 +68,7 @@ function prepareCities(allCities) {
     if (!Object.keys(cities).includes(id)) {
       let lat = randomCity.geometry.coordinates[1],
           lng = randomCity.geometry.coordinates[0];  // geojson...
-      cities[id] = {
-        'name': randomCity.properties.city,
-        'id': id,
-        'LngLat': [lng, lat],
-        'LatLng' : [lat, lng],
-        'lat': lat,
-        'lng': lng,
-      };
+      cities[id] = new City(id, lat, lng);
     }
   }
 
@@ -85,21 +78,33 @@ function prepareCities(allCities) {
   Object.keys(cities).forEach( id => {
     let city = cities[id];
     city.neighbors = citiesArray
-      .sort((a, b) => cityDistance(city, a) - cityDistance(city, b))
+      .sort((a, b) => city.distanceTo(a) - city.distanceTo(b))
       .slice(0, int(random(1.8, 3.2)))
       .map(other => other.id);
-    console.log(city)
   });
 
   return cities
 }
 
-function cityDistance(city, other) {
-  if (city.id == other.id) {
-    return Infinity;
+class City {
+  constructor(id, lat, lng) {
+    console.log(id, lat, lng)
+    this.id = id;
+    this.lat = lat;
+    this.lng = lng;
+    this.LngLat = [lng, lat];
+    this.LatLng = [lat, lng];
+    this.neighbors = [];
   }
-  return earth.map.distance(city.LatLng, other.LatLng);
+
+  distanceTo(other) {
+    if (this.id == other.id) {
+      return Infinity;
+    }
+    return earth.map.distance(this.LatLng, other.LatLng);
+  }
 }
+
 
 function createMap(canvas) {
   let map = mappa.tileMap({
