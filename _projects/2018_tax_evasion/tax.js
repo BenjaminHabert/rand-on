@@ -43,9 +43,7 @@ function showCities(cities) {
 
   // links between cities
   Object.values(cities).forEach(from => {
-    Object.values(from.neighbors).forEach(toId => {
-      let to = cities[toId];
-
+    Object.values(from.neighbors).forEach(to => {
       const fromPos = earth.latLngToPixel(from.lat, from.lng);
       const toPos = earth.latLngToPixel(to.lat, to.lng);
       line(fromPos.x, fromPos.y, toPos.x, toPos.y);
@@ -80,7 +78,7 @@ function prepareCities(allCities) {
     city.neighbors = citiesArray
       .sort((a, b) => city.distanceTo(a) - city.distanceTo(b))
       .slice(0, int(random(1.8, 3.2)))
-      .map(other => other.id);
+      // .map(other => other.id);
   });
 
   return cities
