@@ -15,6 +15,7 @@ thumbnail: rain1.png
 ---
 
 This uses javascript ES6 features and might not work on all browsers.
+this sketch **produces sound**, make sure to turn on your speakers.
 
 {% include sketch.html file="rain.js" id="p5sketch"%}
 
