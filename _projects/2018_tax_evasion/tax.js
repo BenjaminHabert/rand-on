@@ -27,15 +27,25 @@ function draw() {
   }
 
   clear();
+  cities.forEach(city => city.updateInteraction())
   cities.forEach(city => city.update())
   cities.forEach(city => city.draw())
+
+
+  let sum = 0;
+  for (city of cities) {
+    for (coin of city.coins) {
+      sum += 1
+    }
+  }
+  // console.log(sum);
 }
 
 
-class Money {
+class Coin {
   constructor(city) {
-    this.currentCity = city;
-    this.targetCity = city;
+    this.targetLat = city.lat;
+    this.targetLng = city.lng;
     // current
     this.lat = city.lat;
     this.lng = city.lng;
@@ -43,6 +53,25 @@ class Money {
 
   pos() {
     return earth.latLngToPixel(this.lat, this.lng);
+  }
+
+  update() {
+    this.lat = map(0.1, 0, 1, this.lat, this.targetLat);
+    this.lng = map(0.1, 0, 1, this.lng, this.targetLng);
+  }
+
+  draw() {
+    const pos = this.pos();
+
+    fill(255, 100, 100, 100);
+    stroke(240, 90, 90, 120)
+    ellipse(pos.x, pos.y, 18, 19);
+
+
+    const targetPos = earth.latLngToPixel(this.targetLat, this.targetLng);
+    strokeWeight(1);
+    stroke(100, 255, 100);
+    line(pos.x, pos.y, targetPos.x, targetPos.y);
   }
 }
 
@@ -57,13 +86,13 @@ class City {
     this.neighbors = [];
     this.canReceive = true;
 
-    this.money = [];
+    this.coins = [];
     for (let i = 0; i < 5; i++) {
-      this.money.push(new Money(this));
+      this.coins.push(new Coin(this));
     }
   }
 
-  update() {
+  updateInteraction() {
     const pos = this.pos();
     this.canReceive = true;
     if (dist(pos.x, pos.y, mouseX, mouseY) < 50) {
@@ -71,20 +100,57 @@ class City {
     }
   }
 
+  update() {
+    if (!this.canReceive && this.coins.length > 0) {
+      this.coins = this.coins.filter(coin => !this.sendCoinToNeighbors(coin, 0));
+    }
+
+    this.coins.forEach(coin => coin.update());
+  }
+
+  sendCoinToNeighbors(coin, iterations) {
+    let neighbors = shuffle(this.neighbors);
+    let sent = false
+    for (let neighbor of neighbors) {
+      if (neighbor.canReceive) {
+        neighbor.coins.push(coin);
+        coin.targetLat = neighbor.lat;
+        coin.targetLng = neighbor.lng;
+        sent = true;
+        break;
+      }
+    }
+
+    if (!sent & iterations < 2) {
+      for (let neighbor of neighbors) {
+        sent = neighbor.sendCoinToNeighbors(coin, iterations + 1);
+        if (sent) {
+          break;
+        }
+      }
+    }
+
+    return sent;
+  }
+
   draw() {
     this.drawCity();
     this.drawNeighbors();
-    // this.drawMoney();
+    this.drawCoins();
   }
 
   drawCity() {
-    fill(this.canReceive? 0: 'rgb(255, 100, 100)');
+    // fill(this.canReceive? 0: 'rgb(255, 100, 100)');
+    fill(255, 100);
+    stroke(0, 100);
+    strokeWeight(1);
     const pos = this.pos()
-    ellipse(pos.x, pos.y, 10, 10);
+    ellipse(pos.x, pos.y, 20, 20);
   }
 
   drawNeighbors() {
-    stroke(0);
+    stroke(0, 100);
+    strokeWeight(1);
     this.neighbors.forEach(to => {
       const fromPos = this.pos();
       const toPos = to.pos();
@@ -92,12 +158,8 @@ class City {
     })
   }
 
-  drawMoney() {
-    fill(255);
-    this.money.forEach(m => {
-      const pos = m.pos();
-      ellipse(pos.x, pos.y, 8, 8);
-    })
+  drawCoins() {
+    this.coins.forEach(coin => coin.draw());
   }
 
   pos() {
