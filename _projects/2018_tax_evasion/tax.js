@@ -1,5 +1,9 @@
 const mappa = new Mappa('Leaflet');
 const NCITIES = 30;
+const NCOINS = 5;
+const CORPS = [
+  'Apple', 'Google', 'Facebook', 'Amazon', 'Gap', "McDonald's", 'Starbucks'
+]
 
 let cities, allCities;
 let earth;
@@ -10,6 +14,7 @@ function preload() {
 }
 
 function setup() {
+  document.getElementById("corp").innerHTML = random(CORPS);
   let canvas = createCanvas(800, 500).parent('p5sketch');
   earth = mappa.tileMap({
     lat: 47.4596,
@@ -25,6 +30,7 @@ function setup() {
 function draw() {
   if (!cities) {
     if (earth.map) {
+      // some elements need the leaflet map to be instanciated
       prepareMap();
       cities = prepareCities(allCities);
     }
@@ -43,7 +49,8 @@ function draw() {
 
 
 function prepareMap() {
-
+  earth.map.options['maxZoom'] = 5;
+  earth.map.options['minZoom'] = 2;
 }
 
 function prepareCities(allCities) {
@@ -59,17 +66,16 @@ function prepareCities(allCities) {
     }
   }
 
-
-  // STEP 2: find 2 neighbors for each city
+  // STEP 2: find some neighbors for each city
   cities.slice().forEach( city => {
     // using .slice() above because I then reorder the elements and I
     // don't want to miss a city in the forEach loop because of that
     // (it will miss some without it)
-    let newNeighbors = cities
+    let closestNeighbors = cities
       .sort((a, b) => city.distanceTo(a) - city.distanceTo(b))
-      .slice(0, 2);
+      .slice(0, int(random(2, 3.5)));
 
-    for (let neighbor of newNeighbors) {
+    for (let neighbor of closestNeighbors) {
       neighbor.addNeighbor(city);
       city.addNeighbor(neighbor);
     }
@@ -77,9 +83,6 @@ function prepareCities(allCities) {
 
   return cities
 }
-
-
-
 
 
 class City {
@@ -93,8 +96,8 @@ class City {
     this.canReceive = true;
 
     this.coins = [];
-    for (let i = 0; i < 5; i++) {
-      this.coins.push(new Coin(this));
+    for (let i = 0; i < NCOINS; i++) {
+      this.coins.push(new Coin(this.lat, this.lng));
     }
   }
 
@@ -115,7 +118,10 @@ class City {
   }
 
   sendCoinToNeighbors(coin, iterations) {
+    // return true if the coin was indeed sent
     let neighbors = shuffle(this.neighbors);
+
+    // first: try to send to one of the neighbors
     let sent = false
     for (let neighbor of neighbors) {
       if (neighbor.canReceive) {
@@ -127,6 +133,7 @@ class City {
       }
     }
 
+    // then: try to send to the neighbor's neighbors (recursively)
     if (!sent && iterations < 3) {
       for (let neighbor of neighbors) {
         sent = neighbor.sendCoinToNeighbors(coin, iterations + 1);
@@ -144,7 +151,7 @@ class City {
     stroke(0, 100);
     strokeWeight(1);
     const pos = this.pos()
-    ellipse(pos.x, pos.y, 20, 20);
+    ellipse(pos.x, pos.y, 25, 25);
   }
 
   drawNeighbors() {
@@ -181,12 +188,11 @@ class City {
 
 
 class Coin {
-  constructor(city) {
-    this.targetLat = city.lat;
-    this.targetLng = city.lng;
-    // current:
-    this.lat = city.lat;
-    this.lng = city.lng;
+  constructor(lat, lng) {
+    this.lat = lat;
+    this.lng = lng;
+    this.targetLat = lat;
+    this.targetLng = lng;
   }
 
   pos() {
@@ -201,14 +207,10 @@ class Coin {
   draw() {
     const pos = this.pos();
 
-    fill(255, 100, 100, 100);
-    stroke(240, 90, 90, 120)
-    ellipse(pos.x, pos.y, 13, 13);
-
-    // const targetPos = earth.latLngToPixel(this.targetLat, this.targetLng);
-    // strokeWeight(1);
-    // stroke(100, 255, 100);
-    // line(pos.x, pos.y, targetPos.x, targetPos.y);
+    fill(168, 23, 23, 140);
+    stroke(168, 23, 23, 255);
+    strokeWeight(1);
+    ellipse(pos.x, pos.y, 20, 20);
   }
 }
 
@@ -218,17 +220,3 @@ function mouseClicked() {
   console.log(earth.pixelToLatLng(mouseX, mouseY))
   console.log(earth.zoom())
 }
-
-
-
-//
-// function myShuffle(arr) {
-//   let original = arr.slice();
-//   let final = [];
-//   while (final.length < arr.length) {
-//     let index = int(random(original.length))
-//     final.push(original[index]);
-//     original = original.splice(index, 1);
-//   }
-//   return final
-// }
