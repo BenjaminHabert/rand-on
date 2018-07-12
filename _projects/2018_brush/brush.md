@@ -5,25 +5,28 @@ title: Brush
 subtitle: "p5.js"
 dependencies:
      - p5
-     - p5.dom
-     - mappa
-thumbnail: 1.png
+thumbnail: 2.png
 galleries:
   - name: brush
     files:
       - 1.png
       - 2.png
       - 3.png
+      - 4.png
+      - 5.png
+      - 6.png
+      - 7.png
+      - 8.png
+      - 9.png
 ---
-coucou
 
 {% include sketch.html file="brush.js" id="p5sketch"%}
 
-après
+A brush animated by a *[noisy](https://p5js.org/reference/#/p5/noise)* hand.
+Click to reset.
 
 
 
+### Examples of output
 
-### Example of output
-
-<!-- {% include gallery.html gallery="tax" %} -->
+{% include gallery.html gallery="brush" %}
