@@ -25,6 +25,7 @@ galleries:
 A brush animated by a *[noisy](https://p5js.org/reference/#/p5/noise)* hand.
 Click to reset.
 
+{% include code.html file="brush.js" %}
 
 
 ### Examples of output
