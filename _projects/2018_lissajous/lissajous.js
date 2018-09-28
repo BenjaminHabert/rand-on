@@ -53,7 +53,7 @@ class Wiggler {
       y
     });
 
-    let Npoints = 200;
+    let Npoints = document.getElementById('length').value;
     if (this.points.length > Npoints) {
       this.points.splice(0, this.points.length - Npoints)
     }
@@ -67,10 +67,11 @@ class Wiggler {
         vertex(p.x, p.y);
       }
       endShape();
-
-      let p = this.points[this.points.length - 1];
-      fill(0);
-      ellipse(p.x, p.y, circleDiameter, circleDiameter);
+      if(document.getElementById('show_point').checked) {
+        let p = this.points[this.points.length - 1];
+        fill(0);
+        ellipse(p.x, p.y, circleDiameter, circleDiameter);
+      }
     }
   }
 }
@@ -103,9 +104,11 @@ class SquareWave {
   draw() {
     noFill();
     rect(this.x, this.y, this.w, this.w);
-    let d = this.w / 20;
-    fill(0);
-    ellipse(this.point.x, this.point.y, circleDiameter, circleDiameter);
+    if(document.getElementById('show_point').checked) {
+      let d = this.w / 20;
+      fill(0);
+      ellipse(this.point.x, this.point.y, circleDiameter, circleDiameter);
+    }
   }
 }
 
