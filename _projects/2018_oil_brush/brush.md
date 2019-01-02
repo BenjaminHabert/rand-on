@@ -12,6 +12,7 @@ galleries:
         - brush.png
 ---
 
+
 In this sketch I try to mimic the brush effect one might obtain using oil painting. The effect is obtained by
 drawing many almost parallel paths for each stroke. Each path is drawn with a slight variation
 in color.
