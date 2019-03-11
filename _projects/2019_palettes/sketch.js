@@ -3,11 +3,11 @@ const sliders = {
 const options = {
 
 }
+let seed = 0;
 
 
 function setup() {
     createCanvas(600, 600).parent('p5sketch');
-    noLoop();
     colorMode(HSB);
     createOptions()
     createSliders()
@@ -39,7 +39,6 @@ function createSliders() {
     sliders.accentAddHue = makeSlider('add hue to accent', -100, 100, 30)
     sliders.accentAddSaturation = makeSlider('add Saturation to accent', -100, 100, 0)
     sliders.accentAddBrightness = makeSlider('add Brightness to accent', -100, 100, 0)
-    // sliders.brightnessGap = makeSlider('brignthess gap', 0, 50)
 }
 
 function makeSlider(name, min, max, initial) {
@@ -60,15 +59,29 @@ function makeSlider(name, min, max, initial) {
 
     if (name == 'hue') {
         const button = createButton('random')
-        button.mousePressed(() => slider.value(random(0, 360)))
+        // this is a little weird but we need to prepare random values
+        // here. This because we are fixing the seed later
+        const randomValues = []
+        let index = 0;
+        for (let i = 0; i < 100; i++) {
+            randomValues.push(random(0, 360));
+        }
+        button.mousePressed(() => {
+            slider.value(randomValues[index]);
+            index = (index + 1) % randomValues.length;
+        })
         button.parent(div)
     }
 
     return slider
 }
 
-function mouseClicked() {
-    redraw();
+function mouseClicked(event) {
+    if (mouseX > 0 && mouseX < width) {
+        if (mouseY > 0 && mouseY < height) {
+            seed = random(0, 100);
+        }
+    }
 }
 
 function draw() {
@@ -83,7 +96,7 @@ function draw() {
                 scale(1.0 / n);
                 const ratio = (j * n + i) / (n * n);
                 const colors = createPalette(ratio);
-                drawDemo(colors)
+                drawDemo(colors, j * n + i)
                 pop()
             }
         }
@@ -96,7 +109,8 @@ function draw() {
 
 }
 
-function drawDemo(colors) {
+function drawDemo(colors, index) {
+    randomSeed(seed + (index || 0));
     fill(colors.base);
     const margin = 75;
     rect(margin, margin, width - 2 * margin, height - 2 * margin);
@@ -121,8 +135,7 @@ function drawCircle(rmin, rmax) {
 }
 
 function createPalette(ratio) {
-    const hue = ratio === undefined ? sliders.hue.value() : map(ratio, 0, 1, 0, 360);
-
+    const hue = sliders.hue.value() + map(ratio || 0, 0, 1, 0, 360);
 
     const saturation = sliders.saturation.value(),
         brightness = sliders.brightness.value(),
@@ -134,7 +147,6 @@ function createPalette(ratio) {
         accentHue = complementHue + sliders.accentAddHue.value(),
         accentSaturation = complementSaturation + sliders.accentAddSaturation.value(),
         accentBrightness = complementBrightness + sliders.accentAddBrightness.value();
-    // accentBrightness = brightness + sliders.brightnessGap.value()
 
     return {
         base: color(hue % 360, saturation, brightness),
