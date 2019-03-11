@@ -1,5 +1,7 @@
-let sliders = {
-    baseHue: null,
+const sliders = {
+}
+const options = {
+
 }
 
 
@@ -7,11 +9,26 @@ function setup() {
     createCanvas(600, 600).parent('p5sketch');
     noLoop();
     colorMode(HSB);
-
+    createOptions()
     createSliders()
 }
 
+function createOptions() {
+    const optionDiv = createDiv();
+    optionDiv.parent('sliders')
+
+    options.multiples = createCheckbox('multiple hues', true);
+
+    for (let o in options) {
+        options[o].parent(optionDiv);
+    }
+}
+
+
+
+
 function createSliders() {
+
     sliders.hue = makeSlider('hue', 0, 360)
     sliders.saturation = makeSlider('saturation', 0, 100, 30)
     sliders.brightness = makeSlider('brightness', 0, 100, 20)
@@ -55,10 +72,31 @@ function mouseClicked() {
 }
 
 function draw() {
-    const colors = createPalette();
-
     background('rgb(249, 247, 239)')
+    if (options.multiples.checked()) {
+        const n = 4,
+            delta = width / float(n);
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                push()
+                translate(i * delta, j * delta);
+                scale(1.0 / n);
+                const ratio = (j * n + i) / (n * n);
+                const colors = createPalette(ratio);
+                drawDemo(colors)
+                pop()
+            }
+        }
+    }
+    else {
+        const colors = createPalette();
+        drawDemo(colors)
+    }
 
+
+}
+
+function drawDemo(colors) {
     fill(colors.base);
     const margin = 75;
     rect(margin, margin, width - 2 * margin, height - 2 * margin);
@@ -82,9 +120,11 @@ function drawCircle(rmin, rmax) {
     ellipse(x, y, r, r);
 }
 
-function createPalette() {
-    const hue = sliders.hue.value(),
-        saturation = sliders.saturation.value(),
+function createPalette(ratio) {
+    const hue = ratio === undefined ? sliders.hue.value() : map(ratio, 0, 1, 0, 360);
+
+
+    const saturation = sliders.saturation.value(),
         brightness = sliders.brightness.value(),
 
         complementHue = hue + 180,
@@ -97,7 +137,7 @@ function createPalette() {
     // accentBrightness = brightness + sliders.brightnessGap.value()
 
     return {
-        base: color(hue, saturation, brightness),
+        base: color(hue % 360, saturation, brightness),
         complement: color(complementHue % 360, complementSaturation, complementBrightness),
         accent: color(accentHue % 360, accentSaturation, accentBrightness),
     }
