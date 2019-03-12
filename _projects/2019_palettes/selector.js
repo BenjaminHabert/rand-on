@@ -76,19 +76,10 @@ class ColorSelector {
     }
 
 
-
     createSliders() {
         const sliders = {}
         sliders.hue = this.makeSlider('hue', 0, 360)
-        // sliders.saturation = this.makeSlider('saturation', 0, 100, 30)
-        // sliders.brightness = this.makeSlider('brightness', 0, 100, 20)
-
-        // sliders.complementAddSaturation = this.makeSlider('add saturation to complement', -100, 100, 10)
-        // sliders.complementAddBrightness = this.makeSlider('add brightness to complement', -100, 100, 30)
-
         sliders.accentAddHue = this.makeSlider('add hue to accent', -100, 100, 0)
-        // sliders.accentAddSaturation = this.makeSlider('add Saturation to accent', -100, 100, 0)
-        // sliders.accentAddBrightness = this.makeSlider('add Brightness to accent', -100, 100, 0)
         return sliders
     }
 
@@ -123,7 +114,6 @@ class ColorSelector {
             })
             button.parent(div)
         }
-
         return slider
     }
 
@@ -132,18 +122,6 @@ class ColorSelector {
             complementHue = hue + 180 - this.sliders.accentAddHue.value() / 2,
             accentHue = complementHue + this.sliders.accentAddHue.value() / 2;
 
-        // const saturation = this.sliders.saturation.value(),
-        //     brightness = this.sliders.brightness.value(),
-
-
-        //     complementSaturation = saturation + this.sliders.complementAddSaturation.value(),
-        //     complementBrightness = brightness + this.sliders.complementAddBrightness.value(),
-
-
-        //     accentSaturation = complementSaturation + this.sliders.accentAddSaturation.value(),
-        //     accentBrightness = complementBrightness + this.sliders.accentAddBrightness.value();
-
-
         const selector = this.getValues();
         const hsb = (h, s, b) => 'hsb(' + (h % 360).toFixed(0) + ', ' + s.toFixed(0) + '%, ' + b.toFixed(0) + '%)';
         const result = {
@@ -151,12 +129,6 @@ class ColorSelector {
             complement: hsb(complementHue % 360, selector.complement.saturation, selector.complement.brightness),
             accent: hsb(accentHue % 360, selector.accent.saturation, selector.accent.brightness),
         }
-        window.result = result
         return result
-        return {
-            base: color(hue % 360, saturation, brightness),
-            complement: color(complementHue % 360, complementSaturation, complementBrightness),
-            accent: color(accentHue % 360, accentSaturation, accentBrightness),
-        }
     }
 }
