@@ -25,6 +25,7 @@ In this sketch I am experimenting with simple rules for a three-color compositio
  - a complementary color with opposing hue
  - an accent color with higher brightness and saturation
  
+ <script src="selector.js"></script>
 {% include sketch.html file="sketch.js" id="p5sketch"%}
 <center><div id="sliders" class="col-md-10" style="margin: 10px; padding: 10px;"></div></center>
 {% include code.html file="sketch.js" %}
