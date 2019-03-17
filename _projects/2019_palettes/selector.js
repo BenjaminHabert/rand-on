@@ -66,12 +66,29 @@ class ColorSelector {
 
     setup(p) {
         p.createCanvas(this.width, this.width);
+        p.colorMode(p.HSB);
     }
 
     draw(p) {
         p.background(50);
+        this.drawBackground(p);
         for (let marker of this.markers) {
+            p.fill(0, 0, 100);
+            p.stroke(0, 100, 0);
             p.ellipse(marker.x, marker.y, 30, 30)
+        }
+    }
+
+    drawBackground(p) {
+        const w = p.width / 20;
+        for (let x = 0; x < p.width; x += w) {
+            for (let y = 0; y < p.width; y += w) {
+                const saturation = x * 100.0 / p.width,
+                    brightness = y * 100.0 / p.width
+                p.fill(100, saturation, brightness);
+                p.noStroke();
+                p.rect(x, y, w, w);
+            }
         }
     }
 

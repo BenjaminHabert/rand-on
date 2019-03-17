@@ -59,6 +59,7 @@ function draw() {
 function drawDemo(colors, index) {
     randomSeed(seed + (index || 0));
     fill(colors.base);
+    noStroke();
     const margin = 75;
     rect(margin, margin, width - 2 * margin, height - 2 * margin);
 
