@@ -83,24 +83,18 @@ class ColorSelector {
         new p5(sketch, divId);
     }
 
-    mousePressed(p) {
+    getPalette(ratio) {
+        const result = {}
         for (let marker of this.markers) {
-            if (marker.intersectsMouse(p)) {
-                this.selectedMarker = marker;
-            }
+            const hueShift = int(map(ratio, 0, 1, 0, 360));
+            result[marker.name] = marker.hsb(hueShift);
         }
+        return result
     }
 
-    mouseDragged(p) {
-        if (this.selectedMarker) {
-            this.selectedMarker.dragg(p);
-        }
-    }
-
-    mouseReleased(p) {
-        this.selectedMarker = null;
-    }
-
+    /* 
+    * DRAWING FUNCTIONS 
+    */
     setup(p) {
         p.createCanvas(this.width, this.width);
         p.colorMode(p.HSB);
@@ -132,6 +126,30 @@ class ColorSelector {
         }
     }
 
+    /* 
+    * INTERACTION FUNCTIONS 
+    */
+    mousePressed(p) {
+        for (let marker of this.markers) {
+            if (marker.intersectsMouse(p)) {
+                this.selectedMarker = marker;
+            }
+        }
+    }
+
+    mouseDragged(p) {
+        if (this.selectedMarker) {
+            this.selectedMarker.dragg(p);
+        }
+    }
+
+    mouseReleased(p) {
+        this.selectedMarker = null;
+    }
+
+    /* 
+    * SLIDERS FUNCTIONS 
+    */
     getHue(name) {
         const baseHue = this.sliders.hue.value();
         const accentAddHue = this.sliders.accentAddHue.value();
@@ -183,14 +201,5 @@ class ColorSelector {
             button.parent(div)
         }
         return slider
-    }
-
-    getPalette(ratio) {
-        const result = {}
-        for (let marker of this.markers) {
-            const hueShift = int(map(ratio, 0, 1, 0, 360));
-            result[marker.name] = marker.hsb(hueShift);
-        }
-        return result
     }
 }
