@@ -16,6 +16,11 @@ galleries:
         - canvas4.png
         - canvas5.png
         - canvas6.png
+        - canvas7.png
+    - name: bigs
+      files:
+        - canvas_big1.png
+        - canvas_big2.png
 ---
 
 I don't know anything about color composition.
@@ -31,5 +36,7 @@ In this sketch I am experimenting with simple rules for a three-color compositio
 {% include code.html file="sketch.js" %}
 
 
-### Example of output
+### Examples of output
+
 {% include gallery.html gallery="gallery" %}
+{% include gallery.html gallery="bigs" %}
