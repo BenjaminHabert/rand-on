@@ -1,65 +1,65 @@
-let sliders = {
-    baseHue: null,
-}
+let seed = 0;
 
+const options = {}
+let selector;
 
 function setup() {
     createCanvas(600, 600).parent('p5sketch');
-    noLoop();
     colorMode(HSB);
+    createOptions()
 
-    createSliders()
+    selector = new ColorSelector('sliders');
 }
 
-function createSliders() {
-    sliders.hue = makeSlider('hue', 0, 360)
-    sliders.saturation = makeSlider('saturation', 0, 100, 30)
-    sliders.brightness = makeSlider('brightness', 0, 100, 20)
+function createOptions() {
+    const optionDiv = createDiv();
+    optionDiv.parent('sliders')
 
-    sliders.complementAddSaturation = makeSlider('add saturation to complement', -100, 100, 10)
-    sliders.complementAddBrightness = makeSlider('add brightness to complement', -100, 100, 30)
+    options.multiples = createCheckbox('multiple hues', true);
 
-    sliders.accentAddHue = makeSlider('add hue to accent', -100, 100, 30)
-    sliders.accentAddSaturation = makeSlider('add Saturation to accent', -100, 100, 0)
-    sliders.accentAddBrightness = makeSlider('add Brightness to accent', -100, 100, 0)
-    // sliders.brightnessGap = makeSlider('brignthess gap', 0, 50)
-}
-
-function makeSlider(name, min, max, initial) {
-    const div = createDiv()
-
-
-    const label = createP()
-    const slider = createSlider(min, max, initial);
-    slider.elt.onchange = () => label.html(name + ' ' + slider.value())
-    slider.elt.onchange();
-
-
-    div.parent('sliders')
-    div.class("row")
-    slider.parent(div)
-    label.parent(div)
-
-
-    if (name == 'hue') {
-        const button = createButton('random')
-        button.mousePressed(() => slider.value(random(0, 360)))
-        button.parent(div)
+    for (let o in options) {
+        options[o].parent(optionDiv);
     }
-
-    return slider
 }
+
 
 function mouseClicked() {
-    redraw();
+    if (mouseX > 0 && mouseX < width) {
+        if (mouseY > 0 && mouseY < height) {
+            seed = random(0, 100);
+        }
+    }
 }
 
 function draw() {
-    const colors = createPalette();
-
     background('rgb(249, 247, 239)')
+    if (options.multiples.checked()) {
+        const n = 4,
+            delta = width / float(n);
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                push()
+                translate(i * delta, j * delta);
+                scale(1.0 / n);
+                const ratio = (j * n + i) / (n * n);
+                const colors = selector.getPalette(ratio);
+                drawDemo(colors, j * n + i)
+                pop()
+            }
+        }
+    }
+    else {
+        const colors = selector.getPalette();
+        drawDemo(colors)
+    }
 
+
+}
+
+function drawDemo(colors, index) {
+    randomSeed(seed + (index || 0));
     fill(colors.base);
+    noStroke();
     const margin = 75;
     rect(margin, margin, width - 2 * margin, height - 2 * margin);
 
@@ -80,25 +80,4 @@ function drawCircle(rmin, rmax) {
         x = random(r, width - r),
         y = random(r, height - r);
     ellipse(x, y, r, r);
-}
-
-function createPalette() {
-    const hue = sliders.hue.value(),
-        saturation = sliders.saturation.value(),
-        brightness = sliders.brightness.value(),
-
-        complementHue = hue + 180,
-        complementSaturation = saturation + sliders.complementAddSaturation.value(),
-        complementBrightness = brightness + sliders.complementAddBrightness.value(),
-
-        accentHue = complementHue + sliders.accentAddHue.value(),
-        accentSaturation = complementSaturation + sliders.accentAddSaturation.value(),
-        accentBrightness = complementBrightness + sliders.accentAddBrightness.value();
-    // accentBrightness = brightness + sliders.brightnessGap.value()
-
-    return {
-        base: color(hue, saturation, brightness),
-        complement: color(complementHue % 360, complementSaturation, complementBrightness),
-        accent: color(accentHue % 360, accentSaturation, accentBrightness),
-    }
 }
