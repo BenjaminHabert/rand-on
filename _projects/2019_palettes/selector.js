@@ -1,3 +1,61 @@
+class Marker {
+    constructor(name, hue, saturation, brightness) {
+        this.name = name;
+        this.color = { hue, saturation, brightness };
+        this.radius = 30;
+    }
+
+    setHue(hue) {
+        this.color.hue = hue % 360;
+    }
+
+    hsb(hueShift) {
+        const c = this.color
+        return 'hsb(' + (c.hue + (hueShift ? hueShift : 0)) % 360 + ', ' + c.saturation + '%, ' + c.brightness + '%)'
+    }
+
+    draw(p) {
+        const c = this.color
+        p.colorMode(p.HSB);
+        p.fill(c.hue, c.saturation, c.brightness);
+        p.stroke((c.hue + 180) % 360, 80, 80);
+        const pos = this.getPos(p);
+        p.ellipse(pos.x, pos.y, this.radius, this.radius);
+    }
+
+    getPos(p) {
+        const c = this.color
+        const x = c.saturation / 100.0 * p.width,
+            y = c.brightness / 100.0 * p.height;
+        return { x, y };
+    }
+
+    setPos(p, x, y) {
+        this.color = {
+            hue: this.color.hue,
+            saturation: x * 100.0 / p.width,
+            brightness: y * 100.0 / p.height,
+        }
+    }
+
+    intersectsMouse(p) {
+        const pos = this.getPos(p);
+        const d = p.dist(pos.x, pos.y, p.mouseX, p.mouseY);
+        if (d < this.radius) {
+            this.offset = {
+                x: pos.x - p.mouseX,
+                y: pos.y - p.mouseY,
+            };
+            return true
+        }
+        return false;
+    }
+
+    dragg(p) {
+        this.setPos(p, p.mouseX + this.offset.x, p.mouseY + this.offset.y);
+    }
+}
+
 class ColorSelector {
     constructor(divId) {
 
@@ -5,11 +63,7 @@ class ColorSelector {
         this.sliders = this.createSliders()
         this.width = 300;
 
-        this.markers = [
-            { x: 0.2 * this.width, y: 0.2 * this.width, name: 'base' },
-            { x: 0.5 * this.width, y: 0.5 * this.width, name: 'complement' },
-            { x: 0.8 * this.width, y: 0.8 * this.width, name: 'accent' },
-        ]
+        this.markers = [];
         this.selectedMarker = null;
         this.offset = { x: 0, y: 0 }
 
@@ -19,44 +73,27 @@ class ColorSelector {
             p.mousePressed = () => this.mousePressed(p);
             p.mouseDragged = () => this.mouseDragged(p);
             p.mouseReleased = () => this.mouseReleased(p);
+
+            this.markers = [
+                new Marker('base', 0, 20, 20),
+                new Marker('complement', 0, 50, 50),
+                new Marker('accent', 0, 80, 80),
+            ];
         }
         new p5(sketch, divId);
     }
 
-    getValues() {
-        const saturation = (marker) => marker.x / this.width * 100;
-        const brightness = (marker) => marker.y / this.width * 100;
-        return {
-            base: {
-                saturation: saturation(this.markers[0]),
-                brightness: brightness(this.markers[0]),
-            },
-            complement: {
-                saturation: saturation(this.markers[1]),
-                brightness: brightness(this.markers[1]),
-            },
-            accent: {
-                saturation: saturation(this.markers[2]),
-                brightness: brightness(this.markers[2]),
-            }
-        }
-    }
-
     mousePressed(p) {
         for (let marker of this.markers) {
-            const d = p.dist(marker.x, marker.y, p.mouseX, p.mouseY);
-            if (d < 30) {
+            if (marker.intersectsMouse(p)) {
                 this.selectedMarker = marker;
-                this.offset.x = marker.x - p.mouseX;
-                this.offset.y = marker.y - p.mouseY;
             }
         }
     }
 
     mouseDragged(p) {
         if (this.selectedMarker) {
-            this.selectedMarker.x = p.mouseX + this.offset.x
-            this.selectedMarker.y = p.mouseY + this.offset.y
+            this.selectedMarker.dragg(p);
         }
     }
 
@@ -72,10 +109,13 @@ class ColorSelector {
     draw(p) {
         p.background(50);
         this.drawBackground(p);
+        this.drawMarkers(p);
+    }
+
+    drawMarkers(p) {
         for (let marker of this.markers) {
-            p.fill(0, 0, 100);
-            p.stroke(0, 100, 0);
-            p.ellipse(marker.x, marker.y, 30, 30)
+            marker.setHue(this.getHue(marker.name))
+            marker.draw(p)
         }
     }
 
@@ -92,11 +132,22 @@ class ColorSelector {
         }
     }
 
+    getHue(name) {
+        const baseHue = this.sliders.hue.value();
+        const accentAddHue = this.sliders.accentAddHue.value();
+        const hues = {
+            base: baseHue,
+            complement: int(baseHue + 180 - accentAddHue / 2) % 360,
+            accent: int(baseHue + 180 + accentAddHue / 2) % 360,
+        }
+        return hues[name];
+    }
+
 
     createSliders() {
         const sliders = {}
         sliders.hue = this.makeSlider('hue', 0, 360)
-        sliders.accentAddHue = this.makeSlider('add hue to accent', -100, 100, 0)
+        sliders.accentAddHue = this.makeSlider('add hue to accent', -100, 100, 30)
         return sliders
     }
 
@@ -135,16 +186,10 @@ class ColorSelector {
     }
 
     getPalette(ratio) {
-        const hue = this.sliders.hue.value() + map(ratio || 0, 0, 1, 0, 360),
-            complementHue = hue + 180 - this.sliders.accentAddHue.value() / 2,
-            accentHue = complementHue + this.sliders.accentAddHue.value() / 2;
-
-        const selector = this.getValues();
-        const hsb = (h, s, b) => 'hsb(' + (h % 360).toFixed(0) + ', ' + s.toFixed(0) + '%, ' + b.toFixed(0) + '%)';
-        const result = {
-            base: hsb(hue % 360, selector.base.saturation, selector.base.brightness),
-            complement: hsb(complementHue % 360, selector.complement.saturation, selector.complement.brightness),
-            accent: hsb(accentHue % 360, selector.accent.saturation, selector.accent.brightness),
+        const result = {}
+        for (let marker of this.markers) {
+            const hueShift = int(map(ratio, 0, 1, 0, 360));
+            result[marker.name] = marker.hsb(hueShift);
         }
         return result
     }
