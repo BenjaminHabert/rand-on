@@ -118,8 +118,9 @@ class ColorSelector {
         for (let x = 0; x < p.width; x += w) {
             for (let y = 0; y < p.width; y += w) {
                 const saturation = x * 100.0 / p.width,
-                    brightness = y * 100.0 / p.width
-                p.fill(100, saturation, brightness);
+                    brightness = y * 100.0 / p.width,
+                    hue = this.getHue('base');
+                p.fill(hue, saturation, brightness);
                 p.noStroke();
                 p.rect(x, y, w, w);
             }
