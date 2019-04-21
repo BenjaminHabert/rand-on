@@ -1,4 +1,17 @@
-function call_or_value(item) {
+const randomChooser = (values, weights) => function () {
+    if (weights === undefined)
+        return random(values)
+
+    const total = weights.reduce((acc, current) => acc + current);
+    const r = random(total);
+    let current = 0;
+    for (let i = 0; i < values.length; i++) {
+        current += weights[i];
+        if (current > r) return values[i];
+    }
+}
+
+function get_value(item) {
     try {
         return item();
     }
@@ -25,8 +38,8 @@ class Brush {
     stroke(x, y) {
         const end = this.end(x, y);
         const stroke = new Stroke(x, y, end.x, end.y);
-        stroke.color(call_or_value(this.col));
-        stroke.strokeWeight(call_or_value(this.thickness));
+        stroke.color(get_value(this.col));
+        stroke.strokeWeight(get_value(this.thickness));
         return stroke;
     }
 
@@ -44,7 +57,7 @@ class Brush {
 
 const drawVertial = (length) => ({
     end: (x, y) => {
-        return createVector(x, y + call_or_value(length));
+        return createVector(x, y + get_value(length));
     }
 })
 

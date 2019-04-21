@@ -5,9 +5,17 @@ function setup() {
     createCanvas(600, 600).parent('p5sketch');
     background(200);
     // brush = new VerticalBrush(undefined, undefined, () => random(100, 200));
+    const col = randomChooser(
+        [
+            color(100, 0, 200),
+            color(200, 0, 100)
+        ],
+        [5, 1]
+    )
+    const length = randomChooser([100, 200]);
     brush = buildBrush(
-        new Brush(),
-        drawVertial(100)
+        new Brush(col),
+        drawVertial(length)
     )
 }
 
