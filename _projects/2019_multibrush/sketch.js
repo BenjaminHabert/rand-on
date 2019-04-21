@@ -5,7 +5,7 @@ function setup() {
     background(200);
 
     shapes = [
-        backgroundShape()
+        backgroundShape(color('rgb(87, 77, 119)'))
     ]
 
 }
@@ -22,29 +22,26 @@ function draw() {
     noLoop();
 }
 
-function backgroundShape() {
-    const brush = backgroundBrush();
+function backgroundShape(col) {
+    const brush = backgroundBrush(col);
     const shape = compose(
         new Shape(brush),
         lineShape(100, 100, 500, 300),
-        fixedNumberOfStrokes(30),
+        strokeInCanvas(50),
+        // fixedNumberOfStrokes(30),
+        maxFilledRatio(0.5)
     );
     return shape;
 }
 
 
-function backgroundBrush() {
-    const col = randomChooser(
-        [
-            color(100, 0, 200),
-            color(200, 0, 100)
-        ],
-        [2, 1]
-    )
-    const length = () => random(100, 200);
+function backgroundBrush(col) {
+    console.log(col)
+    const length = () => random(200, 500);
     const brush = compose(
-        new Brush(col),
-        drawVertial(length),
+        new Brush(col, 60),
+        drawFixedAngled(HALF_PI, length),
+
     )
     return brush;
 }

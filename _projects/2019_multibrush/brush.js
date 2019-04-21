@@ -26,6 +26,7 @@ class Shape {
     constructor(brush) {
         this.brush = brush;
         this.nStrokes = 0;
+        this.strokeArea = 0;
     }
 
     pick() {
@@ -40,8 +41,11 @@ class Shape {
         return this.nStrokes > 20;
     }
 
+    addArea(area) {
+        this.strokeArea += area;
+    }
+
     draw() {
-        console.log(this.isComplete())
         for (let i = 0; i < 10; i++) {
             const start = this.pick();
             for (let j = 0; j < 10; j++) {
@@ -50,6 +54,7 @@ class Shape {
                 if (this.isValid(stroke)) {
                     stroke.draw()
                     this.nStrokes++;
+                    this.addArea(stroke.area());
                     return;
                 }
             }
@@ -69,8 +74,45 @@ const lineShape = (x1, y1, x2, y2) => ({
 
 const fixedNumberOfStrokes = (maxStrokes) => (self) => ({
     isComplete: () => {
-        console.log(self, self.nStrokes);
         return self.nStrokes >= maxStrokes;
+    }
+})
+
+const strokeInCanvas = (margin) => ({
+    isValid: (stroke) => {
+        margin = margin || 0;
+        return (
+            stroke.start.x >= 0 + margin
+            && stroke.start.y >= 0 + margin
+            && stroke.end.x <= width - margin
+            && stroke.end.y <= height - margin);
+    }
+})
+
+const maxFilledRatio = (ratio) => (self) => ({
+    area: () => {
+        if (self.computedArea)
+            return self.computedArea;
+
+        const nPoints = 200;
+        let validPoints = 0;
+        const sketchArea = width * height;
+        for (let i = 0; i < nPoints; i++) {
+            const x = random(0, width),
+                y = random(0, height);
+            const fakeStroke = {
+                start: createVector(x, y),
+                end: createVector(x, y)
+            }
+            if (self.isValid)
+                validPoints++;
+        }
+        self.computedArea = sketchArea * float(validPoints) / nPoints;
+        return self.computedArea;
+    },
+    isComplete: () => {
+        console.log('areas : ', self.strokeArea, self.area());
+        return self.strokeArea >= ratio * self.area();
     }
 })
 
@@ -115,19 +157,22 @@ class Brush {
         return createVector(x + 100, y);
     }
     col() {
-        return color(100, 0, 100, 0.5);
+        return color(0, 0.5);
     }
     thickness() {
         return 20;
     }
 }
 
-const drawVertial = (length) => ({
+const drawFixedAngled = (angle, length) => ({
     end: (x, y) => {
-        return createVector(x, y + get_value(length));
+        const actualLength = get_value(length),
+            actualAngle = get_value(angle);
+        const dx = actualLength * cos(actualAngle),
+            dy = actualLength * sin(angle);
+        return createVector(x + dx, y + dy);
     }
 })
-
 
 class Stroke {
 
@@ -137,10 +182,13 @@ class Stroke {
         this.length = dist(x1, y1, x2, y2);
         this.angle = atan2(y2 - y1, x2 - x1);
         this.col = color(0, 0.5);
-        this.weight = 30;
-
-        this.col = color(0, 0.5);
         this.thickness = 30;
+
+        // this.col = color(0, 0.5);
+        // this.thickness = 30;
+    }
+    area() {
+        return this.length * this.thickness
     }
 
     color(col) {
