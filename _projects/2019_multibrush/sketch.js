@@ -4,7 +4,11 @@ let brush;
 function setup() {
     createCanvas(600, 600).parent('p5sketch');
     background(200);
-    brush = new VerticalBrush(undefined, undefined, () => random(100, 200));
+    // brush = new VerticalBrush(undefined, undefined, () => random(100, 200));
+    brush = buildBrush(
+        new Brush(),
+        drawVertial(100)
+    )
 }
 
 function draw() {

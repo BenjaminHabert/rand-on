@@ -7,12 +7,30 @@ function call_or_value(item) {
     }
 }
 
+
+function buildBrush(baseBrush, ...brushBehaviors) {
+    return Object.assign(
+        baseBrush,
+        ...brushBehaviors
+    )
+}
+
+
 class Brush {
     constructor(col, thickness, end) {
         if (col !== undefined) this.col = col;
         if (thickness !== undefined) this.thickness = thickness;
         if (end !== undefined) this.end = end;
     }
+    stroke(x, y) {
+        const end = this.end(x, y);
+        const stroke = new Stroke(x, y, end.x, end.y);
+        stroke.color(call_or_value(this.col));
+        stroke.strokeWeight(call_or_value(this.thickness));
+        return stroke;
+    }
+
+    // default behaviors:
     end(x, y) {
         return createVector(x + 100, y);
     }
@@ -22,26 +40,13 @@ class Brush {
     thickness() {
         return 20;
     }
-
-    stroke(x, y) {
-        const end = this.end(x, y);
-        const stroke = new Stroke(x, y, end.x, end.y);
-        stroke.color(call_or_value(this.col));
-        stroke.strokeWeight(call_or_value(this.thickness));
-        return stroke;
-    }
 }
 
-class VerticalBrush extends Brush {
-    constructor(col, thickness, length) {
-        super(col, thickness, undefined);
-        this.length = length;
+const drawVertial = (length) => ({
+    end: (x, y) => {
+        return createVector(x, y + call_or_value(length));
     }
-
-    end(x, y) {
-        return createVector(x, y + call_or_value(this.length));
-    }
-}
+})
 
 
 class Stroke {
