@@ -1,8 +1,61 @@
-class Brush {
+function call_or_value(item) {
+    try {
+        return item();
+    }
+    catch (TypeError) {
+        return item;
+    }
+}
 
-    constructor() {
+class Brush {
+    constructor(col, thickness, end) {
+        if (col !== undefined) this.col = col;
+        if (thickness !== undefined) this.thickness = thickness;
+        if (end !== undefined) this.end = end;
+    }
+    end(x, y) {
+        return createVector(x + 100, y);
+    }
+    col() {
+        return color(100, 0, 100, 0.5);
+    }
+    thickness() {
+        return 20;
+    }
+
+    stroke(x, y) {
+        const end = this.end(x, y);
+        const stroke = new Stroke(x, y, end.x, end.y);
+        stroke.color(call_or_value(this.col));
+        stroke.strokeWeight(call_or_value(this.thickness));
+        return stroke;
+    }
+}
+
+class VerticalBrush extends Brush {
+    constructor(col, thickness, length) {
+        super(col, thickness, undefined);
+        this.length = length;
+    }
+
+    end(x, y) {
+        return createVector(x, y + call_or_value(this.length));
+    }
+}
+
+
+class Stroke {
+
+    constructor(x1, y1, x2, y2) {
+        this.start = createVector(x1, y1);
+        this.end = createVector(x2, y2);
+        this.length = dist(x1, y1, x2, y2);
+        this.angle = atan2(y2 - y1, x2 - x1);
         this.col = color(0, 0.5);
         this.weight = 30;
+
+        this.col = color(0, 0.5);
+        this.thickness = 30;
     }
 
     color(col) {
@@ -11,18 +64,16 @@ class Brush {
     strokeWeight(pixels) {
         this.thickness = pixels;
     }
-    line(x1, y1, x2, y2) {
-        const length = dist(x1, y1, x2, y2),
-            angle = atan2(y2 - y1, x2 - x1);
-        console.log(length, angle)
+    draw() {
         push();
-        translate(x1, y1);
-        rotate(angle);
-        this.draw(length);
+        translate(this.start.x, this.start.y);
+        rotate(this.angle);
+        console.log(this.start, this.angle, this.length);
+        this.apply_stroke(this.length);
         pop();
     }
-    draw(length) {
 
+    apply_stroke(length) {
         const curve = this.buildCurve(this.thickness, length);
         const nStrokes = this.evaluateNStrokes(this.thickness);
 
