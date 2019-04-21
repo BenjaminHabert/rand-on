@@ -21,11 +21,78 @@ function get_value(item) {
 }
 
 
-function buildBrush(baseBrush, ...brushBehaviors) {
-    return Object.assign(
-        baseBrush,
-        ...brushBehaviors
-    )
+
+class Shape {
+    constructor(brush) {
+        this.brush = brush;
+        this.nStrokes = 0;
+    }
+
+    pick() {
+        return createVector(random(width), random(height));
+    }
+
+    isValid(stroke) {
+        return true;
+    }
+
+    isComplete() {
+        return this.nStrokes > 20;
+    }
+
+    draw() {
+        console.log(this.isComplete())
+        for (let i = 0; i < 10; i++) {
+            const start = this.pick();
+            for (let j = 0; j < 10; j++) {
+                const localBrush = get_value(this.brush);
+                const stroke = localBrush.stroke(start.x, start.y);
+                if (this.isValid(stroke)) {
+                    stroke.draw()
+                    this.nStrokes++;
+                    return;
+                }
+            }
+        }
+    }
+}
+
+const lineShape = (x1, y1, x2, y2) => ({
+    pick: () => {
+        const ratio = random();
+        return createVector(
+            lerp(x1, x2, ratio),
+            lerp(y1, y2, ratio)
+        )
+    }
+})
+
+const fixedNumberOfStrokes = (maxStrokes) => (self) => ({
+    isComplete: () => {
+        console.log(self, self.nStrokes);
+        return self.nStrokes >= maxStrokes;
+    }
+})
+
+
+
+function compose(baseObject, ...objectBehaviors) {
+    let composedObject = Object.assign(baseObject);
+    for (let behaviour of objectBehaviors) {
+        try {
+            composedObject = Object.assign(
+                composedObject,
+                behaviour(composedObject)
+            )
+        }
+        catch (TypeError) {
+            composedObject = Object.assign(
+                composedObject,
+                behaviour
+            )
+        }
+    }
+    return composedObject;
 }
 
 
@@ -86,7 +153,6 @@ class Stroke {
         push();
         translate(this.start.x, this.start.y);
         rotate(this.angle);
-        console.log(this.start, this.angle, this.length);
         this.apply_stroke(this.length);
         pop();
     }
