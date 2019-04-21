@@ -44,11 +44,23 @@ class Stroke {
         this.col = color(0, 0.5);
         this.thickness = 30;
 
-        // this.col = color(0, 0.5);
-        // this.thickness = 30;
+        const half_thickness = createVector(this.thickness, 0)
+        half_thickness.rotate(HALF_PI)
+        half_thickness.rotate(this.angle);
+
+        this.corners = [
+            p5.Vector.add(this.start, half_thickness),
+            p5.Vector.sub(this.start, half_thickness),
+            p5.Vector.add(this.end, half_thickness),
+            p5.Vector.sub(this.end, half_thickness),
+        ]
     }
     area() {
         return this.length * this.thickness
+    }
+
+    bounds() {
+        return this.corners
     }
 
     color(col) {

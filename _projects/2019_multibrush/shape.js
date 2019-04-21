@@ -10,6 +10,12 @@ class Shape {
     }
 
     isValid(stroke) {
+        return stroke.corners.reduce(
+            (previous, corner) => previous && this.isValidPoint(corner),
+            true)
+    }
+
+    isValidPoint(stroke) {
         return true;
     }
 
@@ -22,7 +28,7 @@ class Shape {
     }
 
     draw() {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 50; i++) {
             const start = this.pick();
             for (let j = 0; j < 10; j++) {
                 const localBrush = get_value(this.brush);
@@ -54,14 +60,15 @@ const fixedNumberOfStrokes = (maxStrokes) => (self) => ({
     }
 })
 
+
 const strokeInCanvas = (margin) => ({
-    isValid: (stroke) => {
+    isValidPoint: (point) => {
         margin = margin || 0;
         return (
-            stroke.start.x >= 0 + margin
-            && stroke.start.y >= 0 + margin
-            && stroke.end.x <= width - margin
-            && stroke.end.y <= height - margin);
+            point.x >= 0 + margin
+            && point.y >= 0 + margin
+            && point.x <= width - margin
+            && point.y <= height - margin);
     }
 })
 
@@ -76,18 +83,21 @@ const maxFilledRatio = (ratio) => (self) => ({
         for (let i = 0; i < nPoints; i++) {
             const x = random(0, width),
                 y = random(0, height);
-            const fakeStroke = {
-                start: createVector(x, y),
-                end: createVector(x, y)
-            }
-            if (self.isValid)
+            const fakePoint = createVector(x, y);
+            if (self.isValidPoint(fakePoint))
                 validPoints++;
         }
         self.computedArea = sketchArea * float(validPoints) / nPoints;
         return self.computedArea;
     },
     isComplete: () => {
-        console.log('areas : ', self.strokeArea, self.area());
         return self.strokeArea >= ratio * self.area();
+    }
+})
+
+const circleShape = (x, y, radius) => ({
+    isValidPoint: (point) => {
+        const d = dist(x, y, point.x, point.y);
+        return d < radius;
     }
 })
