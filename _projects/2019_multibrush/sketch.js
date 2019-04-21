@@ -1,13 +1,14 @@
 let shapes;
 const STROKES_BY_FRAME = 3;
 const FAST_STROKES = false;
+let colors;
 
 
 function setup() {
     createCanvas(600, 600).parent('p5sketch');
     background(210, 205, 200);
 
-    const colors = {
+    colors = {
         'background': color('rgb(87, 77, 119)'),
         'yellow': color('rgb(224, 165, 62)'),
         'orange': color('rgb(242, 155, 89)')
@@ -15,8 +16,9 @@ function setup() {
 
     shapes = [
         backgroundShape(colors.background),
-        groundShape(colors.orange),
-        sunShape(colors.yellow, width / 3, height / 3, 100),
+        crossedShape(),
+        // groundShape(colors.orange),
+        // sunShape(colors.yellow, width / 3, height / 3, 100),
     ]
 }
 
@@ -33,6 +35,27 @@ function draw() {
     }
     if (shapesComplete)
         noLoop();
+}
+
+
+function crossedShape() {
+    const length = 100;
+    const brush = randomChooser([
+        compose(
+            new Brush(colors.yellow),
+            drawFixedAngled(PI / 3.0, length)
+        ),
+        compose(
+            new Brush(colors.orange),
+            drawFixedAngled(2 * PI / 3.0, length)
+        )
+    ])
+
+    return compose(
+        new Shape(brush),
+        strokeInCanvas(50),
+        maxFilledRatio(2)
+    )
 }
 
 function backgroundShape(col) {
@@ -53,33 +76,33 @@ function backgroundShape(col) {
     return shape;
 }
 
-function sunShape(col, x, y, radius) {
-    const length = () => random(10, 100);
-    const thickness = () => random(10, 20);
-    const brush = compose(
-        new Brush(col, thickness),
-        randomAngle(length)
-    );
-    const shape = compose(
-        new Shape(brush),
-        circleShape(x, y, radius),
-        maxFilledRatio(2.0)
-    )
-    return shape
-}
+// function sunShape(col, x, y, radius) {
+//     const length = () => random(10, 100);
+//     const thickness = () => random(10, 20);
+//     const brush = compose(
+//         new Brush(col, thickness),
+//         randomAngle(length)
+//     );
+//     const shape = compose(
+//         new Shape(brush),
+//         circleShape(x, y, radius),
+//         maxFilledRatio(2.0)
+//     )
+//     return shape
+// }
 
-function groundShape(col) {
-    const length = () => random(50, 100);
-    const thickness = () => random(20, 40);
-    const angle = randomChooser([0, PI])
-    const brush = compose(
-        new Brush(col, thickness),
-        drawFixedAngled(angle, length)
-    );
-    const shape = compose(
-        new Shape(brush),
-        rectShape(50, height - 150, width - 100, 100),
-        maxFilledRatio(3.0)
-    )
-    return shape
-}
+// function groundShape(col) {
+//     const length = () => random(50, 100);
+//     const thickness = () => random(20, 40);
+//     const angle = randomChooser([0, PI])
+//     const brush = compose(
+//         new Brush(col, thickness),
+//         drawFixedAngled(angle, length)
+//     );
+//     const shape = compose(
+//         new Shape(brush),
+//         rectShape(50, height - 150, width - 100, 100),
+//         maxFilledRatio(3.0)
+//     )
+//     return shape
+// }

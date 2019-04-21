@@ -11,6 +11,7 @@ galleries:
       files:
         - circles.png
         - sun_and_ground.png
+        - crossed.png
 ---
 
 <script src="utils.js"></script>
