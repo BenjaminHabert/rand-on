@@ -11,6 +11,16 @@ class Brush {
     strokeWeight(pixels) {
         this.thickness = pixels;
     }
+    line(x1, y1, x2, y2) {
+        const length = dist(x1, y1, x2, y2),
+            angle = atan2(y2 - y1, x2 - x1);
+        console.log(length, angle)
+        push();
+        translate(x1, y1);
+        rotate(angle);
+        this.draw(length);
+        pop();
+    }
     draw(length) {
 
         const curve = this.buildCurve(this.thickness, length);

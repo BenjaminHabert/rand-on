@@ -8,17 +8,16 @@ function setup() {
 }
 
 function draw() {
-    push();
-    translate(width * 1.0 / 4, random(height * 1.0 / 4, height * 3.0 / 4));
-    rotate(0);
 
     brush.strokeWeight(50);
     // brush.color(colors[2])
-    brush.draw(width * 2.0 / 4);
+    brush.line(50, 50, 200, 100);
+    brush.line(150, 400, 50, 300);
+    brush.line(300, 300, 500, 200)
 
     pop();
 
-    if (frameCount > 20) {
-        noLoop();
-    }
+    // if (frameCount > 20) {
+    noLoop();
+    // }
 }
