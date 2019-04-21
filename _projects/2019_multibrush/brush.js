@@ -88,6 +88,8 @@ class Stroke {
     }
 
     apply_stroke(length) {
+        if (FAST_STROKES)
+            return this.apply_fast_stroke(length);
         const curve = this.buildCurve(this.thickness, length);
         const nStrokes = this.evaluateNStrokes(this.thickness);
 
@@ -178,6 +180,12 @@ class Stroke {
     randomizeStrokeWeight(thickness) {
         const { minWeight, maxWeight } = this.minMaxStrokeWeight(thickness);
         return random(minWeight, maxWeight);
+    }
+
+    apply_fast_stroke(length) {
+        fill(this.col)
+        stroke(0);
+        rect(0, 0, length, this.thickness)
     }
 
 }

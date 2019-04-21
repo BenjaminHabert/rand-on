@@ -1,23 +1,23 @@
 let shapes;
 const STROKES_BY_FRAME = 3;
+const FAST_STROKES = false;
 
 
 function setup() {
     createCanvas(600, 600).parent('p5sketch');
-    background(200);
+    background(210, 205, 200);
 
     const colors = {
         'background': color('rgb(87, 77, 119)'),
         'yellow': color('rgb(224, 165, 62)'),
-        'orange': color('rgb(226, 144, 81)')
+        'orange': color('rgb(242, 155, 89)')
     }
 
     shapes = [
         backgroundShape(colors.background),
-        circleS(colors.yellow, width / 3, height / 3, 100),
-        circleS(colors.orange, 2 * width / 3, 2 * height / 3, 150),
+        groundShape(colors.orange),
+        sunShape(colors.yellow, width / 3, height / 3, 100),
     ]
-
 }
 
 
@@ -53,7 +53,7 @@ function backgroundShape(col) {
     return shape;
 }
 
-function circleS(col, x, y, radius) {
+function sunShape(col, x, y, radius) {
     const length = () => random(10, 100);
     const thickness = () => random(10, 20);
     const brush = compose(
@@ -64,6 +64,22 @@ function circleS(col, x, y, radius) {
         new Shape(brush),
         circleShape(x, y, radius),
         maxFilledRatio(2.0)
+    )
+    return shape
+}
+
+function groundShape(col) {
+    const length = () => random(50, 100);
+    const thickness = () => random(20, 40);
+    const angle = randomChooser([0, PI])
+    const brush = compose(
+        new Brush(col, thickness),
+        drawFixedAngled(angle, length)
+    );
+    const shape = compose(
+        new Shape(brush),
+        rectShape(50, height - 150, width - 100, 100),
+        maxFilledRatio(3.0)
     )
     return shape
 }

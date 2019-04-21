@@ -10,6 +10,7 @@ galleries:
     - name: gallery
       files:
         - circles.png
+        - sun_and_ground.png
 ---
 
 <script src="utils.js"></script>
