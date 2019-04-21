@@ -1,5 +1,5 @@
 let shapes;
-
+const STROKES_BY_FRAME = 3;
 
 
 function setup() {
@@ -8,47 +8,62 @@ function setup() {
 
     const colors = {
         'background': color('rgb(87, 77, 119)'),
+        'yellow': color('rgb(224, 165, 62)'),
+        'orange': color('rgb(226, 144, 81)')
     }
 
     shapes = [
-        backgroundShape(colors.background)
+        backgroundShape(colors.background),
+        circleS(colors.yellow, width / 3, height / 3, 100),
+        circleS(colors.orange, 2 * width / 3, 2 * height / 3, 150),
     ]
 
 }
 
 
 function draw() {
-
+    let shapesComplete = true;
+    let strokes = 0;
     for (let shape of shapes) {
-        if (!shape.isComplete()) {
+        while (strokes < STROKES_BY_FRAME && !shape.isComplete()) {
+            shapesComplete = false;
             shape.draw();
-            return;
+            strokes++;
         }
     }
-    noLoop();
+    if (shapesComplete)
+        noLoop();
 }
 
 function backgroundShape(col) {
-    const brush = backgroundBrush(col);
+    const length = () => random(100, 400);
+    const brush = compose(
+        new Brush(col, 60),
+        drawFixedAngled(HALF_PI, length),
+
+    )
     const shape = compose(
         new Shape(brush),
         // lineShape(100, 100, 500, 300),
-        // strokeInCanvas(50),
-        circleShape(width / 2, height / 2, 100),
+        strokeInCanvas(20),
+        // circleShape(width / 2, height / 2, 100),
         // fixedNumberOfStrokes(30),
-        maxFilledRatio(3.0)
+        maxFilledRatio(6.0)
     );
     return shape;
 }
 
-
-function backgroundBrush(col) {
-    console.log(col)
-    const length = () => random(50, 400);
+function circleS(col, x, y, radius) {
+    const length = () => random(10, 100);
+    const thickness = () => random(10, 20);
     const brush = compose(
-        new Brush(col, 20),
-        drawFixedAngled(HALF_PI / 2.0, length),
-
+        new Brush(col, thickness),
+        randomAngle(length)
+    );
+    const shape = compose(
+        new Shape(brush),
+        circleShape(x, y, radius),
+        maxFilledRatio(2.0)
     )
-    return brush;
+    return shape
 }

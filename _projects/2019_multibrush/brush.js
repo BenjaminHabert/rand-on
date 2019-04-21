@@ -29,7 +29,17 @@ const drawFixedAngled = (angle, length) => ({
         const actualLength = get_value(length),
             actualAngle = get_value(angle);
         const dx = actualLength * cos(actualAngle),
-            dy = actualLength * sin(angle);
+            dy = actualLength * sin(actualAngle);
+        return createVector(x + dx, y + dy);
+    }
+})
+
+const randomAngle = (length) => ({
+    end: (x, y) => {
+        const actualLength = get_value(length);
+        const actualAngle = random(0, TWO_PI);
+        const dx = actualLength * cos(actualAngle),
+            dy = actualLength * sin(actualAngle);
         return createVector(x + dx, y + dy);
     }
 })

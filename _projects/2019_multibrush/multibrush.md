@@ -3,15 +3,13 @@ layout: post
 date: 2019-04-21
 title: Multiple Brushes
 subtitle: "p5.js"
-thumbnail: template.png
+thumbnail: circles.png
 dependencies:
      - p5
 galleries:
     - name: gallery
       files:
-        - 1.png
-        - 2.png
-        - 3.png
+        - circles.png
 ---
 
 <script src="utils.js"></script>
