@@ -14,6 +14,15 @@ function setup() {
         'orange': color('rgb(242, 155, 89)')
     }
 
+    colors = {
+        'background': color('#444345'),
+        'accent': color('#3c546c'),
+        'detail': color('#e0e3e8'),
+        // #9c9ea3
+        // #1c1e20
+        // https://www.canva.com/colors/color-palette-generator/
+    }
+
     shapes = [
         backgroundShape(colors.background),
         crossedShape(),
@@ -42,14 +51,14 @@ function crossedShape() {
     const length = 100;
     const brush = randomChooser([
         compose(
-            new Brush(colors.yellow),
+            new Brush(colors.accent),
             drawFixedAngled(PI / 3.0, length)
         ),
         compose(
-            new Brush(colors.orange),
+            new Brush(colors.detail),
             drawFixedAngled(2 * PI / 3.0, length)
         )
-    ])
+    ], [2, 1])
 
     return compose(
         new Shape(brush),

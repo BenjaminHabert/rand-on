@@ -12,6 +12,7 @@ galleries:
         - circles.png
         - sun_and_ground.png
         - crossed.png
+        - crossed_winter.png
 ---
 
 <script src="utils.js"></script>
@@ -23,4 +24,7 @@ galleries:
 
 
 ### Example of output
+
+Checkout [this pull request](https://github.com/BenjaminHabert/rand-on/pull/2) to see how each file was generated.
+
 {% include gallery.html gallery="gallery" %}
