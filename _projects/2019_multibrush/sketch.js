@@ -1,36 +1,19 @@
-let shapes;
-const STROKES_BY_FRAME = 3;
 const FAST_STROKES = false;
-let colors;
+const STROKES_BY_FRAME = FAST_STROKES ? 5 : 2;
+const INCREMENT = 0.9;
+const save_name = "crossed_" + INCREMENT.toFixed(2) + '_.png'
+
+let shapes;
+let canvas;
 
 
 function setup() {
-    createCanvas(600, 600).parent('p5sketch');
+    canvas = createCanvas(600, 600)
+    canvas.parent('p5sketch');
     background(210, 205, 200);
 
-    colors = {
-        'background': color('rgb(87, 77, 119)'),
-        'yellow': color('rgb(224, 165, 62)'),
-        'orange': color('rgb(242, 155, 89)')
-    }
-
-    colors = {
-        'background': color('#444345'),
-        'accent': color('#3c546c'),
-        'detail': color('#e0e3e8'),
-        // #9c9ea3
-        // #1c1e20
-        // https://www.canva.com/colors/color-palette-generator/
-    }
-
-    shapes = [
-        backgroundShape(colors.background),
-        crossedShape(),
-        // groundShape(colors.orange),
-        // sunShape(colors.yellow, width / 3, height / 3, 100),
-    ]
+    shapes = buildCrossedIncrement();
 }
-
 
 function draw() {
     let shapesComplete = true;
@@ -46,19 +29,49 @@ function draw() {
         noLoop();
 }
 
+function keyTyped() {
+    if (key == 's') {
+        console.log('saving to ' + save_name);
+        saveCanvas(canvas, save_name);
+    }
+}
 
-function crossedShape() {
+
+function buildCrossedIncrement() {
+    colors = {
+        'background': color('#444345'),
+        'accent': color('#3c546c'),
+        'detail': color('#e0e3e8'),
+        // #9c9ea3
+        // #1c1e20
+        // https://www.canva.com/colors/color-palette-generator/
+    }
+
+    const crossColors = [colors.accent, colors.detail];
+    const colorRatios = [INCREMENT, 1 - INCREMENT];
+
+    const shapes = [
+        backgroundShape(colors.background),
+        crossedShape(crossColors, colorRatios),
+        // groundShape(colors.orange),
+        // sunShape(colors.yellow, width / 3, height / 3, 100),
+    ]
+    return shapes;
+}
+
+
+function crossedShape(colors, ratios) {
     const length = 100;
     const brush = randomChooser([
         compose(
-            new Brush(colors.accent),
+            new Brush(colors[0]),
             drawFixedAngled(PI / 3.0, length)
         ),
         compose(
-            new Brush(colors.detail),
+            new Brush(colors[1]),
             drawFixedAngled(2 * PI / 3.0, length)
         )
-    ], [2, 1])
+    ], ratios)
 
     return compose(
         new Shape(brush),
