@@ -53,7 +53,7 @@ function makeControls(divId) {
 
 function restart() {
     background(210, 205, 200);
-    shapes = buildCrossedIncrement(INCREMENT_X);
+    shapes = buildCrossedIncrement(INCREMENT_X, INCREMENT_Y);
     loop();
 }
 
@@ -85,7 +85,7 @@ function keyTyped() {
 }
 
 
-function buildCrossedIncrement(increment) {
+function buildCrossedIncrement(incrementX, incrementY) {
     colors = {
         'background': color('#444345'),
         'accent': color('#3c546c'),
@@ -96,19 +96,22 @@ function buildCrossedIncrement(increment) {
     }
 
     const crossColors = [colors.accent, colors.detail];
-    const colorRatios = [increment, 1 - increment];
+    const colorRatios = [incrementX, 1 - incrementX];
+    const maxWidth = width - 100;
+    const minWidth = lerp(width / 4, maxWidth, incrementY);
+
+    const shapeWidth = map(incrementX, 0, 0.5, maxWidth, minWidth, true);
+    const shapeHeight = map(incrementX, 0.5, 1, minWidth, maxWidth, true);
 
     const shapes = [
         backgroundShape(colors.background),
-        crossedShape(crossColors, colorRatios),
-        // groundShape(colors.orange),
-        // sunShape(colors.yellow, width / 3, height / 3, 100),
+        crossedShape(crossColors, colorRatios, shapeWidth, shapeHeight),
     ]
     return shapes;
 }
 
 
-function crossedShape(colors, ratios) {
+function crossedShape(colors, ratios, shapeWidth, shapeHeight) {
     const length = 100;
     const brush = randomChooser([
         compose(
@@ -123,7 +126,7 @@ function crossedShape(colors, ratios) {
 
     return compose(
         new Shape(brush),
-        strokeInCanvas(50),
+        rectShape(width / 2 - shapeWidth / 2, height / 2 - shapeHeight / 2, shapeWidth, shapeHeight),
         maxFilledRatio(2)
     )
 }
@@ -139,6 +142,7 @@ function backgroundShape(col) {
         new Shape(brush),
         // lineShape(100, 100, 500, 300),
         strokeInCanvas(20),
+        // rectShape(20, 20, width - 40, height - 40),
         // circleShape(width / 2, height / 2, 100),
         // fixedNumberOfStrokes(30),
         maxFilledRatio(6.0)

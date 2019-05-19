@@ -103,6 +103,12 @@ const circleShape = (x, y, radius) => ({
 })
 
 const rectShape = (x, y, w, h) => ({
+    pick: () => {
+        return createVector(
+            lerp(x, x + w, random()),
+            lerp(y, y + h, random())
+        )
+    },
     isValidPoint: (point) => {
         return (
             point.x >= x
