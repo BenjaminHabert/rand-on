@@ -6,6 +6,7 @@ subtitle: "p5.js"
 thumbnail: circles.png
 dependencies:
      - p5
+     - p5.dom
 galleries:
     - name: gallery
       files:
