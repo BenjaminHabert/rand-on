@@ -1,12 +1,26 @@
 let FAST_STROKES = true;
-const STROKES_BY_FRAME = FAST_STROKES ? 5 : 2;
+let STROKES_BY_FRAME = FAST_STROKES ? 5 : 2;
 let INCREMENT_X = 0.9;
 let INCREMENT_Y = 0.5;
 let SAVE_BASENAME = 'crossed';
 
+let DRAW_ALL = false;
 
 let shapes;
 let canvas;
+
+
+function* make_increments(stepsX, stepsY) {
+    for (let i = 0; i < stepsX; i++) {
+        for (let j = 0; j < stepsY; j++) {
+            yield createVector(
+                i / (stepsX - 1),
+                j / (stepsY - 1)
+            )
+        }
+    }
+}
+let increments = make_increments(3, 2);
 
 
 function setup() {
@@ -32,10 +46,13 @@ function makeControls(divId) {
     const saveInput = createInput(SAVE_BASENAME).parent(saveDiv);
     const saveButton = createButton('save').parent(saveDiv);
 
+
+
     fast.parent(main);
     incrementDivX.parent(main);
     incrementDivY.parent(main);
     saveDiv.parent(main);
+
 
     fast.changed(update);
     incrementX.changed(update);
@@ -43,15 +60,44 @@ function makeControls(divId) {
     saveInput.input(() => SAVE_BASENAME = saveInput.value());
     saveButton.mousePressed(saveImage);
 
+
     function update() {
         FAST_STROKES = fast.checked();
+        STROKES_BY_FRAME = FAST_STROKES ? 5 : 2;
         INCREMENT_X = incrementX.value();
         INCREMENT_Y = incrementY.value();
         restart();
     }
+
+
+    const createAllDiv = createDiv();
+    const stepsXInput = createInput('3').parent(createAllDiv);
+    const stepsYInput = createInput('2').parent(createAllDiv);
+    const createAllButton = createButton('generate all images').parent(createAllDiv);
+
+    createAllDiv.parent(main);
+
+    createAllButton.mousePressed(() => {
+        const stepsX = Number(stepsXInput.value());
+        const stepsY = Number(stepsYInput.value());
+        increments = make_increments(stepsX, stepsY);
+        DRAW_ALL = true;
+        restart();
+    });
 }
 
 function restart() {
+    if (DRAW_ALL) {
+        next = increments.next().value;
+        if (next) {
+            INCREMENT_X = next.x;
+            INCREMENT_Y = next.y;
+        }
+        else {
+            DRAW_ALL = false;
+            return;
+        }
+    }
     background(210, 205, 200);
     shapes = buildCrossedIncrement(INCREMENT_X, INCREMENT_Y);
     loop();
@@ -67,12 +113,20 @@ function draw() {
             strokes++;
         }
     }
-    if (shapesComplete)
-        noLoop();
+    if (shapesComplete) {
+        if (DRAW_ALL) {
+            saveImage();
+            restart();
+        }
+        else {
+            noLoop();
+        }
+    }
 }
 
 function saveImage() {
-    const save_name = SAVE_BASENAME + '_' + INCREMENT_X.toFixed(1) + '_' + INCREMENT_Y.toFixed(1) + '_.png';
+    const fast = FAST_STROKES ? "fast_" : "";
+    const save_name = SAVE_BASENAME + '_' + fast + INCREMENT_X.toFixed(1) + '_' + INCREMENT_Y.toFixed(1) + '_.png';
     console.log(save_name);
     saveCanvas(canvas, save_name);
 }
