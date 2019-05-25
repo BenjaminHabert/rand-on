@@ -24,6 +24,8 @@ images that depend on two parameters. The images are then assembled in a grid.
 <script src="js/generics/shape.js"></script>
 <script src="js/generics/brush.js"></script>
 <script src="js/experiments/cross.js"></script>
+<script src="js/experiments/circles.js"></script>
+<script src="js/experiments/lines.js"></script>
 {% include sketch.html file="js/sketch.js" id="p5sketch"%}
 
 {% include code.html file="js/sketch.js" %}

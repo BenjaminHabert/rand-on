@@ -5,7 +5,9 @@ let INCREMENT_Y = 0.5;
 let SAVE_BASENAME = 'crossed';
 let DRAW_ALL = false;
 
-let EXPERIMENT_FUNCTION = buildCrossedIncrement
+// let EXPERIMENT_FUNCTION = buildCrossedIncrement;
+// let EXPERIMENT_FUNCTION = buildCirclesIncrement;
+let EXPERIMENT_FUNCTION = buildLinesIncrement;
 
 let shapes;
 let canvas;
