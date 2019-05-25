@@ -11,6 +11,8 @@ galleries:
     - name: gallery
       files:
         - images/crossed.jpg
+        - images/crossed_complete_6.jpg
+        - images/line.jpg
         - images/circles.png
         - images/sun_and_ground.png
         - images/crossed.png
